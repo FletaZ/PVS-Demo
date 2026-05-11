@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PVS Demo</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; margin: 0 auto; max-width: 1000px; padding: 20px; color: #333; }
+        h1 { text-align: center; color: #2c3e50; }
+        .authors { text-align: center; font-style: italic; margin-bottom: 20px; }
+        .abstract, .settings { background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        h2 { border-bottom: 2px solid #2c3e50; padding-bottom: 5px; margin-top: 30px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
+        th { background-color: #2c3e50; color: white; }
+        audio { width: 220px; height: 40px; }
+    </style>
+</head>
+<body>
+
+    <h1>PVS: Psychoacoustic Voice Shield for Proactive Protection Against Voice Cloning</h1>
+    <div class="authors">Yiwei Hu, Kuntharrgyal Khysru, Wenjie Tang, Jianguo Wei</div>
+
+    <div class="abstract">
+        <h2>Abstract</h2>
+        <p>Voice cloning based on zero-shot TTS/VC models makes it easy to imitate a target speaker from a short reference recording. This paper proposes Psychoacoustic Voice Shield (PVS), a proactive protection framework that injects carefully crafted perturbations into the user’s reference speech so that human listeners still perceive high-quality audio, while downstream TTS/VC systems fail to preserve the true speaker identity. PVS operates in the short-time Fourier transform (STFT) magnitude domain and combines a Nesterov-accelerated iterative FGSM scheme that minimizes speaker-embedding similarity with a loudness-normalized psychoacoustic masking loss that confines perturbation energy to perceptually masked time–frequency regions. Consequently, the structured perturbation regulates the trade-off between attack strength and perceptual quality via a single weight parameter. Experiments on multiple personalized TTS/VC models and several ASV systems show that, under the same perturbation budget, PVS achieves stronger or comparable speaker obfuscation than gradient-based baselines while substantially improving objective quality and imperceptibility, and maintains comparable cross-model transferability while improving perceptual quality under the evaluated settings.</p>
+    </div>
+
+    <div class="settings">
+        <h2>Demo Settings</h2>
+        <p>This demo uses <strong>XTTS v2</strong> as the voice cloning model. The examples are selected from the <code>LibriSpeech test-clean</code> dataset using a fixed random seed, maintaining a gender balance across 4 speakers (2 males, 2 females). The text content of the cloned speech is consistent with the transcript of the reference speech.</p>
+    </div>
+
+    <h2>Speaker 1 (Male) - LibriSpeech ID: 61</h2>
+    <table>
+        <tr>
+            <th>Method</th>
+            <th>Protected Reference Speech (Input)</th>
+            <th>Cloned Speech (Output via XTTS v2)</th>
+        </tr>
+        <tr>
+            <td><strong>Clean (No Protection)</strong></td>
+            <td><audio controls preload="none"><source src="male_1/61-70968-0000.flac" type="audio/flac"></audio></td>
+            <td><audio controls preload="none"><source src="male_1/61-70968-0000_tts_clean.wav" type="audio/wav"></audio></td>
+        </tr>
+        <tr>
+            <td><strong>FGSM</strong></td>
+            <td><audio controls preload="none"><source src="male_1/61-70968-0000_ref_fgsm.wav" type="audio/wav"></audio></td>
+            <td><audio controls preload="none"><source src="male_1/61-70968-0000_tts_fgsm.wav" type="audio/wav"></audio></td>
+        </tr>
+        <tr>
+            <td><strong>I-FGSM</strong></td>
+            <td><audio controls preload="none"><source src="male_1/61-70968-0000_ref_ifgsm.wav" type="audio/wav"></audio></td>
+            <td><audio controls preload="none"><source src="male_1/61-70968-0000_tts_ifgsm.wav" type="audio/wav"></audio></td>
+        </tr>
+        <tr>
+            <td><strong>MI-FGSM</strong></td>
+            <td><audio controls preload="none"><source src="male_1/61-70968-0000_ref_mifgsm.wav" type="audio/wav"></audio></td>
+            <td><audio controls preload="none"><source src="male_1/61-70968-0000_tts_mifgsm.wav" type="audio/wav"></audio></td>
+        </tr>
+        <tr>
+            <td><strong>NI-FGSM</strong></td>
+            <td><audio controls preload="none"><source src="male_1/61-70968-0000_ref_nifgsm.wav" type="audio/wav"></audio></td>
+            <td><audio controls preload="none"><source src="male_1/61-70968-0000_tts_nifgsm.wav" type="audio/wav"></audio></td>
+        </tr>
+        <tr style="background-color: #f0f8ff;">
+            <td><strong>PVS (Proposed)</strong></td>
+            <td><audio controls preload="none"><source src="male_1/61-70968-0000_ref_nifgsm_psy.wav" type="audio/wav"></audio></td>
+            <td><audio controls preload="none"><source src="male_1/61-70968-0000_tts_nifgsm_psy.wav" type="audio/wav"></audio></td>
+        </tr>
+    </table>
+
+    <h2>Speaker 2 (Male) - LibriSpeech ID: 908</h2>
+    <table>
+        <tr>
+            <th>Method</th>
+            <th>Protected Reference Speech (Input)</th>
+            <th>Cloned Speech (Output via XTTS v2)</th>
+        </tr>
+        <tr>
+            <td><strong>Clean (No Protection)</strong></td>
+            <td><audio controls preload="none"><source src="male_2/908-31957-0000.flac" type="audio/flac"></audio></td>
+            <td><audio controls preload="none"><source src="male_2/908-31957-0000_tts_clean.wav" type="audio/wav"></audio></td>
+        </tr>
+        <tr>
+            <td><strong>FGSM</strong></td>
+            <td><audio controls preload="none"><source src="male_2/908-31957-0000_ref_fgsm.wav" type="audio/wav"></audio></td>
+            <td><audio controls preload="none"><source src="male_2/908-31957-0000_tts_fgsm.wav" type="audio/wav"></audio></td>
+        </tr>
+        <tr>
+            <td><strong>I-FGSM</strong></td>
+            <td><audio controls preload="none"><source src="male_2/908-31957-0000_ref_ifgsm.wav" type="audio/wav"></audio></td>
+            <td><audio controls preload="none"><source src="male_2/908-31957-0000_tts_ifgsm.wav" type="audio/wav"></audio></td>
+        </tr>
+        <tr>
+            <td><strong>MI-FGSM</strong></td>
+            <td><audio controls preload="none"><source src="male_2/908-31957-0000_ref_mifgsm.wav" type="audio/wav"></audio></td>
+            <td><audio controls preload="none"><source src="male_2/908-31957-0000_tts_mifgsm.wav" type="audio/wav"></audio></td>
+        </tr>
+        <tr>
+            <td><strong>NI-FGSM</strong></td>
+            <td><audio controls preload="none"><source src="male_2/908-31957-0000_ref_nifgsm.wav" type="audio/wav"></audio></td>
+            <td><audio controls preload="none"><source src="male_2/908-31957-0000_tts_nifgsm.wav" type="audio/wav"></audio></td>
+        </tr>
+        <tr style="background-color: #f0f8ff;">
+            <td><strong>PVS (Proposed)</strong></td>
+            <td><audio controls preload="none"><source src="male_2/908-31957-0000_ref_nifgsm_psy.wav" type="audio/wav"></audio></td>
+            <td><audio controls preload="none"><source src="male_2/908-31957-0000_tts_nifgsm_psy.wav" type="audio/wav"></audio></td>
+        </tr>
+    </table>
+
+    <h2>Speaker 3 (Female) - LibriSpeech ID: 237</h2>
+    <table>
+        <tr>
+            <th>Method</th>
+            <th>Protected Reference Speech (Input)</th>
+            <th>Cloned Speech (Output via XTTS v2)</th>
+        </tr>
+        <tr>
+            <td><strong>Clean (No Protection)</strong></td>
+            <td><audio controls preload="none"><source src="female_1/237-126133-0000.flac" type="audio/flac"></audio></td>
+            <td><audio controls preload="none"><source src="female_1/237-126133-0000_tts_clean.wav" type="audio/wav"></audio></td>
+        </tr>
+        <tr>
+            <td><strong>FGSM</strong></td>
+            <td><audio controls preload="none"><source src="female_1/237-126133-0000_ref_fgsm.wav" type="audio/wav"></audio></td>
+            <td><audio controls preload="none"><source src="female_1/237-126133-0000_tts_fgsm.wav" type="audio/wav"></audio></td>
+        </tr>
+        <tr>
+            <td><strong>I-FGSM</strong></td>
+            <td><audio controls preload="none"><source src="female_1/237-126133-0000_ref_ifgsm.wav" type="audio/wav"></audio></td>
+            <td><audio controls preload="none"><source src="female_1/237-126133-0000_tts_ifgsm.wav" type="audio/wav"></audio></td>
+        </tr>
+        <tr>
+            <td><strong>MI-FGSM</strong></td>
+            <td><audio controls preload="none"><source src="female_1/237-126133-0000_ref_mifgsm.wav" type="audio/wav"></audio></td>
+            <td><audio controls preload="none"><source src="female_1/237-126133-0000_tts_mifgsm.wav" type="audio/wav"></audio></td>
+        </tr>
+        <tr>
+            <td><strong>NI-FGSM</strong></td>
+            <td><audio controls preload="none"><source src="female_1/237-126133-0000_ref_nifgsm.wav" type="audio/wav"></audio></td>
+            <td><audio controls preload="none"><source src="female_1/237-126133-0000_tts_nifgsm.wav" type="audio/wav"></audio></td>
+        </tr>
+        <tr style="background-color: #f0f8ff;">
+            <td><strong>PVS (Proposed)</strong></td>
+            <td><audio controls preload="none"><source src="female_1/237-126133-0000_ref_nifgsm_psy.wav" type="audio/wav"></audio></td>
+            <td><audio controls preload="none"><source src="female_1/237-126133-0000_tts_nifgsm_psy.wav" type="audio/wav"></audio></td>
+        </tr>
+    </table>
+
+    <h2>Speaker 4 (Female) - LibriSpeech ID: 2961</h2>
+    <table>
+        <tr>
+            <th>Method</th>
+            <th>Protected Reference Speech (Input)</th>
+            <th>Cloned Speech (Output via XTTS v2)</th>
+        </tr>
+        <tr>
+            <td><strong>Clean (No Protection)</strong></td>
+            <td><audio controls preload="none"><source src="female_2/2961-960-0000.flac" type="audio/flac"></audio></td>
+            <td><audio controls preload="none"><source src="female_2/2961-960-0000_tts_clean.wav" type="audio/wav"></audio></td>
+        </tr>
+        <tr>
+            <td><strong>FGSM</strong></td>
+            <td><audio controls preload="none"><source src="female_2/2961-960-0000_ref_fgsm.wav" type="audio/wav"></audio></td>
+            <td><audio controls preload="none"><source src="female_2/2961-960-0000_tts_fgsm.wav" type="audio/wav"></audio></td>
+        </tr>
+        <tr>
+            <td><strong>I-FGSM</strong></td>
+            <td><audio controls preload="none"><source src="female_2/2961-960-0000_ref_ifgsm.wav" type="audio/wav"></audio></td>
+            <td><audio controls preload="none"><source src="female_2/2961-960-0000_tts_ifgsm.wav" type="audio/wav"></audio></td>
+        </tr>
+        <tr>
+            <td><strong>MI-FGSM</strong></td>
+            <td><audio controls preload="none"><source src="female_2/2961-960-0000_ref_mifgsm.wav" type="audio/wav"></audio></td>
+            <td><audio controls preload="none"><source src="female_2/2961-960-0000_tts_mifgsm.wav" type="audio/wav"></audio></td>
+        </tr>
+        <tr>
+            <td><strong>NI-FGSM</strong></td>
+            <td><audio controls preload="none"><source src="female_2/2961-960-0000_ref_nifgsm.wav" type="audio/wav"></audio></td>
+            <td><audio controls preload="none"><source src="female_2/2961-960-0000_tts_nifgsm.wav" type="audio/wav"></audio></td>
+        </tr>
+        <tr style="background-color: #f0f8ff;">
+            <td><strong>PVS (Proposed)</strong></td>
+            <td><audio controls preload="none"><source src="female_2/2961-960-0000_ref_nifgsm_psy.wav" type="audio/wav"></audio></td>
+            <td><audio controls preload="none"><source src="female_2/2961-960-0000_tts_nifgsm_psy.wav" type="audio/wav"></audio></td>
+        </tr>
+    </table>
+
+</body>
+</html>
